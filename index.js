@@ -4,8 +4,9 @@ require('dotenv').config()
 const express = require('express')
 var cors = require('cors')
 
-// Importamos Router
+// Importamos Routers
 const exampleRouter = require('./routes/exampleRouter.js')
+const userRouter = require ('./routes/userRouter.js')
 
 // Config Express
 const app = express()
@@ -18,8 +19,9 @@ const mongoose = require('./utils/database.js');
 // Configuracion de Cors Global
 app.use(cors())
 
-// Pasamos peticiones a Main Router
-app.use('/', exampleRouter)
+// Dividimos peticiones en los routers
+// app.use('/', exampleRouter)
+app.use('/user', userRouter)
 
 // Config puerto
 app.listen(3000, () => {
