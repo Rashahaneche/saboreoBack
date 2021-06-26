@@ -9,7 +9,7 @@ const getToken = (userId) => {
 
 // VERIFICAR TOKEN. Solo devuelve true o false 
 const verifyToken = (token) => {
-	const verificationStatus =  jwt.verify(token, process.env.SECRET_TOKEN, function(err, decoded) {
+	const verificationStatus = jwt.verify(token, process.env.SECRET_TOKEN, function(err, decoded) {
 		if (err) return false
 		return true
 	})
@@ -17,7 +17,7 @@ const verifyToken = (token) => {
 };
 
 // OBTENER INFO DEL TOKEN. Te devuelve la info que este dentro del token. De momento solo el userId
-const getDataToken = (token) =>{
+const getDataToken = (token) => {
 	const decodedInfoToken = jwt.verify(token, process.env.SECRET_TOKEN, function(err, decoded) {
 		if (err) return err
 		return {
@@ -32,6 +32,7 @@ module.exports = {
 	verifyToken,
 	getDataToken,
 }
+
 
 
 
