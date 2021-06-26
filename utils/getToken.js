@@ -1,31 +1,36 @@
 const jwt = require ('jsonwebtoken');
 
 
-// Creamos token. Pasar primer elemento como un objeto.
+// CREAR TOKEN. Devuelve token
+// Pasar primer elemento como un objeto.
 const getToken = (userId) => { 
-	return jwt.sign({data: userId}, process.env.SECRET_TOKEN, {expiresIn: '30d'}) 
+	return jwt.sign({ userId: userId }, process.env.SECRET_TOKEN, {expiresIn: '30d'}) 
 };
 
-// Verificamos token. Ojo es la funcion de verificacion dentro de otra función
-const verifyToken = (userToken) => {
-	const decodedInfo =  jwt.verify(userToken, process.env.SECRET_TOKEN, function(err, decoded) {
-		if (err){
-			return {
-				user: 'No existe',
-				verifiedToken: false
-			}
-		}
+// VERIFICAR TOKEN. Solo devuelve true o false 
+const verifyToken = (token) => {
+	const verificationStatus =  jwt.verify(token, process.env.SECRET_TOKEN, function(err, decoded) {
+		if (err) return false
+		return true
+	})
+	return verificationStatus
+};
+
+// OBTENER INFO DEL TOKEN. Te devuelve la info que este dentro del token. De momento solo el userId
+const getDataToken = (token) =>{
+	const decodedInfoToken = jwt.verify(token, process.env.SECRET_TOKEN, function(err, decoded) {
+		if (err) return err
 		return {
-			userId: decoded.data,
-			verifiedToken: true
+			userId: decoded.userId,
 		}
 	})
-	return decodedInfo
-};
+	return decodedInfoToken
+}
 
 module.exports = {
 	getToken,
-	verifyToken
+	verifyToken,
+	getDataToken,
 }
 
 
