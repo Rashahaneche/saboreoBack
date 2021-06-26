@@ -5,7 +5,7 @@ const User = require('../models/UserModel.js');
 
 // Importamos bcryptjs para encriptar contraseñas
 const encryptPassword = require('../utils/encrypt.js')
-const { getToken } = require('../utils/getToken.js')
+const { getToken } = require('../utils/tokens.js')
 
 // Importamos bcrypt para comparar password
 const bcrypt = require ('bcryptjs');

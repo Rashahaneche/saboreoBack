@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const jwt = require ('jsonwebtoken');
 
-const { verifyToken, getDataToken } = require ('../utils/getToken.js')
+const { verifyToken, getDataToken } = require ('../utils/tokens.js')
 
 // Importamos modelo
 const Dish = require ('../models/DishModel.js');
