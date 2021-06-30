@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const { verifyToken, getDataToken } = require ('../utils/tokens.js')
 
 // Importamos modelo

@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-
 // Importamos modelo
 const User = require('../models/UserModel.js');
+const nodemailer = require('../utils/nodemailer.js')
 
 // Importamos bcryptjs para encriptar contraseñas
 const { encryptPassword, validatePassword } = require('../utils/encrypt.js')
@@ -20,6 +19,19 @@ const singInUser = async (req, res) => {
 
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
+
+	// Definimos la info del email de bienvenida
+	let welcomeMail = {
+		from: '"Saboreeeeeo" <welcome@saboreo.com>',
+		to: email,
+		subject: `${name}, ya eres parte de Saboreo`,
+		text: "Prepárate para comer comida real :)"
+	}
+
+	// Enviamos email de bienvenida
+	nodemailer.transporter.sendMail(welcomeMail, (err, info) => {
+		console.log ('email enviado')
+	});
 	
 	// Devolvemos token creado con id
 	res.json(getToken(createdUser.id))

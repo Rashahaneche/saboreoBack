@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 // Importamos modelo
 const Example = require('../models/ExampleModel.js');
 
