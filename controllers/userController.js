@@ -16,7 +16,9 @@ const singInUser = async (req, res) => {
 	newUser.surname = surname;
 	newUser.email = email;
 	newUser.password = await encryptPassword(password); // Encriptamos pass
-
+    // Comprobamos el email en la base de datos
+	const userFinded = await User.findOne({email: email})
+	if (userFinded) return res.send('El usuario ya existe'); 
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
 
