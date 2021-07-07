@@ -7,13 +7,14 @@ const { encryptPassword, validatePassword } = require('../utils/encrypt.js')
 const { getToken } = require('../utils/tokens.js')
 
 // Funcion para gestionar REGISTRAR USUARIO
-const singInUser = async (req, res) => {
+const singUpUser = async (req, res) => {
 
-	const {name, surname, email, password} = req.body;
+	const {name, surname, nickname, email, password} = req.body;
 	const newUser = new User();
 
 	newUser.name = name;
 	newUser.surname = surname;
+	newUser.nickname = nickname;
 	newUser.email = email;
 	newUser.password = await encryptPassword(password); // Encriptamos pass
     // Comprobamos el email en la base de datos
@@ -21,6 +22,7 @@ const singInUser = async (req, res) => {
 	if (userFinded) return res.send('El usuario ya existe'); 
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
+	console.log ('usuario creado')
 
 	// Definimos la info del email de bienvenida
 	let welcomeMail = {
@@ -67,7 +69,7 @@ const logInUser = async (req, res) => {
 
 // Exportamos como objeto
 module.exports = {
-	singInUser,
+	singUpUser,
 	logInUser
 }
 

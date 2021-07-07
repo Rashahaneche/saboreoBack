@@ -6,6 +6,6 @@ const dishController = require ('../controllers/dishController.js')
 const router = express.Router();
 
 router.post('/', dishController.addDish);
-router.get('/:dishId', dishController.getDish);
+router.get('/', dishController.getListOfDishes);
 
 module.exports = router;
