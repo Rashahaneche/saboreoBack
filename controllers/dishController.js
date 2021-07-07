@@ -10,7 +10,7 @@ const addDish = async (req, res) => {
 	const token  = req.header('authorization').split(" ")[1];
 
 	// Cogemos la info del body para generar el plato
-	const { name, description, price, allergens, tags } = req.body;
+	const { name, description, price, allergens, vegan, glutenFree, tags } = req.body;
 
 	// Añadimos plato si el token ha sido verificado
 	if (verifyToken(token)) {
@@ -23,6 +23,8 @@ const addDish = async (req, res) => {
 			description,
 			price,
 			allergens,
+			vegan,
+			glutenFree,
 			tags,
 			seller : userId
 		})
@@ -37,20 +39,42 @@ const addDish = async (req, res) => {
 	}		
 }
 
-// GET - Devuelve info de un plato segun su Id
-const getDish = async (req, res) => {
+const getListOfDishes = async (req, res) => {
 
-	// Hacemos la consulta y populamos al vendedor
-	// Para populate pasamos primero el campo que queremos popular y luego en un solo string las propiedades que quedemos mostrar separadas por un espacio. El id se incluye por defecto
-	await Dish.findOne({_id : req.params.dishId}).populate('seller', 'name surname email').exec((err, dish) => {
-		if (err) res.json ('No se encuentra una plato con este Id')
-		res.json(dish);
-	})
-	
+	//Funcion para gestionar el número de platos a devolver. Minimo 1 y máximo 64. Defecto 12
+	const getLimitQuery = (limit) => {
+		if(!limit) return 12;
+		if(limit < 0) return 1;
+		if(limit > 0 && limit <= 64) return limit;
+		if(limit > 64) return 64;
+	}
+
+	// Funcion para buscar platos por una palabra. Ej: 'Lentejas'
+	const getSearchDish = (search) => {
+		if(!search) return;
+		if(search) return {$text : {$search: search}}
+	}
+
+	// Funcion para evaluar true o false. Se puede usar en 'vegano' y 'glutenFree'
+	const getTrueFalseQuery = (field, trueFalse) => {
+		if(!trueFalse || !['true', 'false'].includes(trueFalse)) return;
+		if(trueFalse === 'true') return { [field] : 'true' };
+		if(trueFalse === 'false') return { [field] : 'false'};
+	}
+
+	// Query para buscar en la DB 
+	const resultQuery = await Dish.find({
+		... getSearchDish(req.query.text),
+		... getTrueFalseQuery('vegan', req.query.vegan),
+		... getTrueFalseQuery('glutenFree', req.query.glutenFree)
+		}).sort('-dateCreation').populate('seller', 'name surname email').limit(getLimitQuery(Number(req.query.limit)))
+
+	// Devolvemos resultados
+	res.json(resultQuery)
 }
 
 // Exportamos como objeto
 module.exports = {
 	addDish,
-	getDish
+	getListOfDishes
 }
