@@ -11,8 +11,8 @@ const { getToken } = require('../utils/tokens.js')
 
 // Funcion para gestionar REGISTRAR USUARIO
 const singUpUser = async (req, res) => {
-
-	const {name, surname, nickname, email, password} = req.body;
+console.log("hola amigos");
+	const {name, surname, nickname, email, password, userType} = req.body;
 	const newUser = new User();
 	const codeVerification = uuidv4();
 
@@ -22,6 +22,7 @@ const singUpUser = async (req, res) => {
 	newUser.email = email;
 	newUser.verificated;
 	newUser.codeVerification = codeVerification;
+	newUser.userType= userType;
 	newUser.password = await encryptPassword(password); // Encriptamos pass
 
     // Comprobamos si ya hay cuentas con ese email
@@ -48,7 +49,8 @@ const singUpUser = async (req, res) => {
 
 	// Enviamos email de bienvenida
 	nodemailer.transporter.sendMail(welcomeMail, (err, info) => {
-		console.log ('email enviado a', email)
+		if (err) console.log('ha habido', err);
+		console.log ('email enviado a', email, info);
 	});
 	
 	// Devolvemos token creado con id
@@ -86,7 +88,7 @@ const logInUser = async (req, res) => {
 
 	// Buscamos usuario x email
 	const userFinded = await User.findOne({email: email})
-
+    if (!userFinded) return res.json('El usuario no existe');
 	// Validamos password
 	if ( await validatePassword (password, userFinded.password)) {
 		// Devolvemos token
