@@ -2,6 +2,9 @@
 const User = require('../models/UserModel.js');
 const nodemailer = require('../utils/nodemailer.js')
 
+// Importamos UUID para generar cadenas de caracteres aleatorias
+const { v4: uuidv4 } = require('uuid');
+
 // Importamos bcryptjs para encriptar contraseñas
 const { encryptPassword, validatePassword } = require('../utils/encrypt.js')
 const { getToken } = require('../utils/tokens.js')
@@ -11,40 +14,75 @@ const singUpUser = async (req, res) => {
 
 	const {name, surname, nickname, email, password} = req.body;
 	const newUser = new User();
+	const codeVerification = uuidv4();
 
 	newUser.name = name;
 	newUser.surname = surname;
 	newUser.nickname = nickname;
 	newUser.email = email;
+	newUser.verificated;
+	newUser.codeVerification = codeVerification;
 	newUser.password = await encryptPassword(password); // Encriptamos pass
-    // Comprobamos el email en la base de datos
+
+    // Comprobamos si ya hay cuentas con ese email
 	const userFinded = await User.findOne({email: email})
 	if (userFinded) return res.send('El usuario ya existe'); 
+
+	// Comprobamos si alguien ya usa el nickname
+	const nicknameFinded = await User.findOne({nickname: nickname})
+	if (nicknameFinded) return res.send('Alguien ya esta usando este nombre de usuario. Elige otro porfavor :)');
+	
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
 	console.log ('usuario creado')
 
 	// Definimos la info del email de bienvenida
 	let welcomeMail = {
-		from: '"Saboreeeeeo" <welcome@saboreo.com>',
+		from: '"Saboreeeeeo" <saboreo.app@gmail.com>',
 		to: email,
 		subject: `${name}, ya eres parte de Saboreo`,
-		text: "Prepárate para comer comida real :)"
+		html: `<h2>Prepárate para comer comida real :)<h2>
+		<h4>Pero antes necesitamos que verifiques tu cuenta clicando
+		<a href=http://localhost:3000/user/verify?user=${nickname}&code=${codeVerification}>aquí</a></h4>`
 	}
 
 	// Enviamos email de bienvenida
 	nodemailer.transporter.sendMail(welcomeMail, (err, info) => {
-		console.log ('email enviado')
+		console.log ('email enviado a', email)
 	});
 	
 	// Devolvemos token creado con id
 	res.json(getToken(createdUser.id))
 }
 
+// Funcion para verificar CUENTA USUARIO
+const verifyUser = async (req, res) => {
+
+	//Cogemos nickname y codigo
+	const {user, code} = req.query;
+
+	// Comparamos el código
+	const userFinded = await User.findOne({codeVerification : code})
+
+	// Gestionamos si no esncuentra nada
+	if (userFinded === null) res.json('Se produjo un error')	
+
+	// Comparamos nickname
+	if (userFinded.nickname === user) { 
+		
+		//Modificamos campo verificated de la DB
+		await User.findOneAndUpdate({codeVerification : code}, {verificated : true})
+		res.json('Cuenta Verificada');
+		return;
+	}
+	res.json('Se produjo un error')
+}
+
 // Funcion para gestionar LOGIN USER
 const logInUser = async (req, res) => {
 
 	const {email, password} = req.body;
+	// Si es null devolver error
 
 	// Buscamos usuario x email
 	const userFinded = await User.findOne({email: email})
@@ -70,6 +108,7 @@ const logInUser = async (req, res) => {
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
+	verifyUser,
 	logInUser
 }
 
