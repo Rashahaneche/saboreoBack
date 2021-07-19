@@ -5,7 +5,6 @@ const express = require('express')
 const cors = require('cors')
 
 // Importamos Routers
-const exampleRouter = require('./routes/exampleRouter.js')
 const userRouter = require ('./routes/userRouter.js')
 const dishRouter = require ('./routes/dishRouter.js')
 
@@ -15,7 +14,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Conexion inicial a base de datos
-const mongoose = require('./utils/database.js');
+const runDataBase = require('./utils/database.js');
+runDataBase();
 
 // Configuracion de Cors Global
 app.use(cors())

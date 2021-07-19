@@ -105,10 +105,30 @@ const logInUser = async (req, res) => {
 
 }
 
+const verifyData = async (req, res) => {
+
+	const data = Object.keys(req.body)[0];
+	const dataValue = Object.values(req.body)[0];
+
+	const dataFinded = await User.findOne({[data] : [dataValue]});
+
+	if (dataFinded === null) res.json({
+		"error" : undefined,
+		"message" : `Este ${data} está disponible`
+	})
+
+	res.json({
+		"error" : true,
+		"message" : `Este ${data} no está disponible`
+	})
+
+}
+
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
 	verifyUser,
-	logInUser
+	logInUser,
+	verifyData
 }
 
