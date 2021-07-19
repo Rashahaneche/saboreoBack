@@ -106,11 +106,22 @@ const logInUser = async (req, res) => {
 	}
 
 }
-
+// Funccion para pintar Users
+const showUsers = async (req, res) => {
+	// Buscamos usuarios 
+	const cooksFound = await User.find({},"name surname nickname description");
+	//Si no hay usuarios
+    if (!cooksFound) return res.json('No existen cocineros');
+	//Devolver la siguiente info
+	console.log(cooksFound)
+	{res.json(cooksFound)};
+	
+}
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
 	verifyUser,
-	logInUser
+	logInUser,
+	showUsers
 }
 

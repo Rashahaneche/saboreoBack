@@ -11,6 +11,7 @@ const UserSchema = new Schema ({
 	codeVerification: { type: String,required: true},
 	password: {type: String, required: true},
 	userType:{type:String,required:true},
+	description:{type: String, require:true}
 });
 
 module.exports = mongoose.model('User', UserSchema);
