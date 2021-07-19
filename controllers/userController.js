@@ -1,5 +1,6 @@
 // Importamos modelo
 const User = require('../models/UserModel.js');
+const Dish =require('../models/DishModel.js')
 const nodemailer = require('../utils/nodemailer.js')
 
 // Importamos UUID para generar cadenas de caracteres aleatorias
@@ -108,9 +109,11 @@ const logInUser = async (req, res) => {
 }
 // Funccion para pintar Users
 const showUsers = async (req, res) => {
-	// Buscamos usuarios 
-	const cooksFound = await User.find({},"name surname nickname description");
-	//Si no hay usuarios
+	// Buscamos cocineros
+	const userId= await Dish.distinct("seller") 
+	const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"])
+
+	//Si no hay cocineros
     if (!cooksFound) return res.json('No existen cocineros');
 	//Devolver la siguiente info
 	console.log(cooksFound)
