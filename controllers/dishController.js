@@ -66,7 +66,7 @@ const getListOfDishes = async (req, res) => {
 		... getSearchDish(req.query.text),
 		... getTrueFalseQuery('vegan', req.query.vegan),
 		... getTrueFalseQuery('glutenFree', req.query.glutenFree)
-		}).sort('-dateCreation').populate('seller', 'name surname email').limit(getLimitQuery(Number(req.query.limit)))
+		}).sort('-dateCreation').populate('seller', 'name surname nickname').limit(getLimitQuery(Number(req.query.limit)))
 
 	// Devolvemos resultados
 	res.json(resultQuery)
