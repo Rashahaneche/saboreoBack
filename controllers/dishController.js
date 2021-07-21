@@ -40,7 +40,6 @@ const addDish = async (req, res) => {
 }
 
 const getListOfDishes = async (req, res) => {
-
 	//Funcion para gestionar el número de platos a devolver. Minimo 1 y máximo 64. Defecto 12
 	const getLimitQuery = (limit) => {
 		if(!limit) return 12;
