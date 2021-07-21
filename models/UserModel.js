@@ -10,7 +10,6 @@ const UserSchema = new Schema ({
 	verificated: {type: Boolean, default: false, required: true},
 	codeVerification: { type: String,required: true},
 	password: {type: String, required: true},
-	//cocinero:{type: Boolean, default:false,required:true},
 	description:{type: String, require:true}
 });
 

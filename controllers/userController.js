@@ -1,7 +1,7 @@
 // Importamos modelo
 const User = require('../models/UserModel.js');
-const Dish =require('../models/DishModel.js')
-const nodemailer = require('../utils/nodemailer.js')
+const Dish = require('../models/DishModel.js');
+const nodemailer = require('../utils/nodemailer.js');
 
 // Importamos UUID para generar cadenas de caracteres aleatorias
 const { v4: uuidv4 } = require('uuid');
@@ -12,7 +12,6 @@ const { getToken } = require('../utils/tokens.js')
 
 // Funcion para gestionar REGISTRAR USUARIO
 const singUpUser = async (req, res) => {
-console.log("hola amigos");
 	const {name, surname, nickname, email, password, userType} = req.body;
 	const newUser = new User();
 	const codeVerification = uuidv4();
@@ -36,7 +35,6 @@ console.log("hola amigos");
 	
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
-	console.log ('usuario creado')
 
 	// Definimos la info del email de bienvenida
 	let welcomeMail = {
@@ -51,7 +49,6 @@ console.log("hola amigos");
 	// Enviamos email de bienvenida
 	nodemailer.transporter.sendMail(welcomeMail, (err, info) => {
 		if (err) console.log('ha habido', err);
-		console.log ('email enviado a', email, info);
 	});
 	
 	// Devolvemos token creado con id
@@ -110,13 +107,12 @@ const logInUser = async (req, res) => {
 // Funccion para pintar Users
 const showUsers = async (req, res) => {
 	// Buscamos cocineros
-	const userId= await Dish.distinct("seller") 
-	const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"])
+	const userId= await Dish.distinct("seller"); 
+	const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"]);
 
 	//Si no hay cocineros
     if (!cooksFound) return res.json('No existen cocineros');
 	//Devolver la siguiente info
-	console.log(cooksFound)
 	{res.json(cooksFound)};
 	
 }
