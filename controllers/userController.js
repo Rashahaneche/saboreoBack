@@ -95,6 +95,7 @@ const logInUser = async (req, res) => {
 			profile: {
 				name : userFinded.name,
 				surname : userFinded.surname,
+				nickname : userFinded.nickname,
 				email: userFinded.email 
 				}
 			})
