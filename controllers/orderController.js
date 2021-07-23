@@ -1,9 +1,17 @@
 // Importamos modelo
 const Order = require('../models/OrderModel.js');
+const Dish = require ('../models/DishModel.js');
 
 // Funcion para gestionar get
 const getOrder = async (req, res) => {
 	const Orders = await Order.find();
+	res.send (Orders);
+}
+// Funcion para mostrar los pedidos de cada usuario
+const getOrderByUser = async (req, res) => {
+	const UserOrders = await Order.find({buyer:req.params.id},["dish"]);
+    const dishIds= UserOrders.map(orderData => orderData.dish);
+    const Orders= await Dish.find({_id:{$in:dishIds}},["name","description","seller"]);
 	res.send (Orders);
 }
 
@@ -30,5 +38,6 @@ const postOrder = (req, res) => {
 // Exportamos como objeto
 module.exports = {
 	getOrder,
-	postOrder
+	postOrder,
+    getOrderByUser
 }

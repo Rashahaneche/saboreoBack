@@ -8,5 +8,6 @@ const router = express.Router();
 
 router.get('/:id', orderController.getOrder);
 router.post('/', orderController.postOrder);
+router.get ('/user/:id', orderController.getOrderByUser)
 
 module.exports = router;
