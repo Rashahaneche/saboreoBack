@@ -4,8 +4,8 @@ const Dish = require ('../models/DishModel.js');
 
 // Funcion para gestionar get
 const getOrder = async (req, res) => {
-	const Orders = await Order.find();
-	res.send (Orders);
+	const Order = await Order.find({_id:req.params.id});
+	res.send (Order);
 }
 // Funcion para mostrar los pedidos de cada usuario
 const getOrderByUser = async (req, res) => {
