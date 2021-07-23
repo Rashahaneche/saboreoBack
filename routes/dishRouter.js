@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.post('/', dishController.addDish);
 router.get('/', dishController.getListOfDishes);
+router.get('/user/:id',dishController.getDishesBySeller)
 
 module.exports = router;

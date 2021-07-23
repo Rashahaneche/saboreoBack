@@ -72,8 +72,17 @@ const getListOfDishes = async (req, res) => {
 	res.json(resultQuery)
 }
 
+// Funcion para buscar platos por un seller.
+const getDishesBySeller = async (req, res) => {
+	const Dishes = await Dish.find({seller:req.params.id});
+	res.send (Dishes);
+}
+
+
+
 // Exportamos como objeto
 module.exports = {
 	addDish,
-	getListOfDishes
+	getListOfDishes,
+	getDishesBySeller
 }
