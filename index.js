@@ -8,6 +8,7 @@ const cors = require('cors')
 const exampleRouter = require('./routes/exampleRouter.js')
 const userRouter = require ('./routes/userRouter.js')
 const dishRouter = require ('./routes/dishRouter.js')
+const orderRouter= require ('./routes/orderRouter')
 
 // Config Express
 const app = express()
@@ -24,6 +25,7 @@ app.use(cors())
 // app.use('/', exampleRouter)
 app.use('/user', userRouter)
 app.use('/dish', dishRouter)
+app.use('/order', orderRouter)
 
 // Config puerto
 app.listen(3000, () => {
