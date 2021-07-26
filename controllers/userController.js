@@ -104,11 +104,21 @@ const logInUser = async (req, res) => {
 	}
 
 }
+// Función para validar usuario (nickname)
+const validateUser = async (req, res) => {
+	//console.log ('hola', req.query.nickname)
+	const thatUserExists = await User.exists({nickname:req.query.nickname});
+	return res.send(thatUserExists);
+}
 
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
 	verifyUser,
-	logInUser
+	logInUser,
+	validateUser,
 }
+
+
+
 
