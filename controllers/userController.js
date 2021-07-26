@@ -1,6 +1,7 @@
 // Importamos modelo
 const User = require('../models/UserModel.js');
-const nodemailer = require('../utils/nodemailer.js')
+const Dish = require('../models/DishModel.js');
+const nodemailer = require('../utils/nodemailer.js');
 
 // Importamos UUID para generar cadenas de caracteres aleatorias
 const { v4: uuidv4 } = require('uuid');
@@ -11,8 +12,7 @@ const { getToken } = require('../utils/tokens.js')
 
 // Funcion para gestionar REGISTRAR USUARIO
 const singUpUser = async (req, res) => {
-
-	const {name, surname, nickname, email, password} = req.body;
+	const {name, surname, nickname, email, password, userType} = req.body;
 	const newUser = new User();
 	const codeVerification = uuidv4();
 
@@ -22,6 +22,7 @@ const singUpUser = async (req, res) => {
 	newUser.email = email;
 	newUser.verificated;
 	newUser.codeVerification = codeVerification;
+	newUser.userType= userType;
 	newUser.password = await encryptPassword(password); // Encriptamos pass
 
     // Comprobamos si ya hay cuentas con ese email
@@ -34,7 +35,6 @@ const singUpUser = async (req, res) => {
 	
 	// Creamos usuario y devolvemos la info a una variable para poder coger el id generado x mongo
 	const createdUser = await newUser.save()
-	console.log ('usuario creado')
 
 	// Definimos la info del email de bienvenida
 	let welcomeMail = {
@@ -48,7 +48,7 @@ const singUpUser = async (req, res) => {
 
 	// Enviamos email de bienvenida
 	nodemailer.transporter.sendMail(welcomeMail, (err, info) => {
-		console.log ('email enviado a', email)
+		if (err) console.log('ha habido', err);
 	});
 	
 	// Devolvemos token creado con id
@@ -86,7 +86,7 @@ const logInUser = async (req, res) => {
 
 	// Buscamos usuario x email
 	const userFinded = await User.findOne({email: email})
-
+    if (!userFinded) return res.json('El usuario no existe');
 	// Validamos password
 	if ( await validatePassword (password, userFinded.password)) {
 		// Devolvemos token
@@ -95,6 +95,7 @@ const logInUser = async (req, res) => {
 			profile: {
 				name : userFinded.name,
 				surname : userFinded.surname,
+				nickname : userFinded.nickname,
 				email: userFinded.email 
 				}
 			})
@@ -105,6 +106,13 @@ const logInUser = async (req, res) => {
 
 }
 
+// Función para validar usuario (nickname)
+const validateUser = async (req, res) => {
+	const thatUserExists = await User.exists({nickname:req.query.nickname});
+	return res.send(thatUserExists);
+}
+
+// Funcion para verificar rapidamente nickname e email
 const verifyData = async (req, res) => {
 
 	const data = Object.keys(req.body)[0];
@@ -123,11 +131,29 @@ const verifyData = async (req, res) => {
 			})
 }
 
+// Funccion para pintar Users
+const showUsers = async (req, res) => {
+	
+	// Buscamos cocineros
+	const userId= await Dish.distinct("seller"); 
+	const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"]);
+
+	//Si no hay cocineros
+    if (!cooksFound) return res.json('No existen cocineros');
+	//Devolver la siguiente info
+	{res.json(cooksFound)};
+	
+}
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
 	verifyUser,
 	logInUser,
-	verifyData
+	verifyData,
+	validateUser,
+	showUsers
 }
+
+
+
 
