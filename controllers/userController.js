@@ -105,7 +105,6 @@ const logInUser = async (req, res) => {
 	}
 
 }
-<<<<<<< HEAD
 // Función para validar usuario (nickname)
 const validateUser = async (req, res) => {
 	//console.log ('hola', req.query.nickname)
@@ -113,7 +112,6 @@ const validateUser = async (req, res) => {
 	return res.send(thatUserExists);
 }
 
-=======
 // Funccion para pintar Users
 const showUsers = async (req, res) => {
 	// Buscamos cocineros
@@ -126,17 +124,13 @@ const showUsers = async (req, res) => {
 	{res.json(cooksFound)};
 	
 }
->>>>>>> 8496d514a6c7241c68e1e8a1b42e6f69c8274a11
 // Exportamos como objeto
 module.exports = {
 	singUpUser,
 	verifyUser,
 	logInUser,
-<<<<<<< HEAD
 	validateUser,
-=======
 	showUsers
->>>>>>> 8496d514a6c7241c68e1e8a1b42e6f69c8274a11
 }
 
 
