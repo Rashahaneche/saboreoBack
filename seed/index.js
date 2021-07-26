@@ -1,15 +1,32 @@
+// Variables de entorno
+require('dotenv').config()
+
 const mongoose = require ('mongoose');
+//mongoose.set('debug', true);
+const runDataBase = require('../utils/database.js');
 
-// Conexion a base de datos
-const connectDB = async () => {
-	try {
+const User = require('../models/UserModel.js');
+const Dish = require('../models/DishModel.js');
 
-		await mongoose.connect(`mongodb+srv://${process.env.MATLAS_USER}:${process.env.MATLAS_PASS}@cluster0.tfuyc.mongodb.net/saboreo?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true})
+const freshUsers = require('./users.js');
+const freshDishes = require('./dishes.js');
 
-	} catch (err) {
-		console.log('Error conectando a la base de datos.', err);
-	}
-}
+const restartDB = async () => {
+	await runDataBase();
+	await Promise.all([
+		User.deleteMany(),
+		Dish.deleteMany()
+	])
+	
+	return Promise.all([
+		 User.insertMany(freshUsers),
+		 Dish.insertMany(freshDishes)
+	])
+};
 
-connectDB();
-
+restartDB()
+	.then(() => {
+		console.log('Base de datos reseteada')
+		process.exit()
+	})
+	.catch(err => `Error reseteando la DB: ${err}`)
