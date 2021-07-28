@@ -80,11 +80,24 @@ const getDishesBySeller = async (req, res) => {
 }
 // Funcion para mostrar los pedidos de cada usuario
 const 	getLatestDishesOrderedByUser = async (req, res) => {
-	const userOrders = await Order.find({buyer:req.params.id},["dish"]);
+
+	// Cogemos el token de la cabecera de la llamada Post
+	const token  = req.header('authorization').split(" ")[1];
+
+	// Cogemos la info del body para generar el plato
+	const { name, description, price, allergens, vegan, glutenFree, tags } = req.body;
+
+	// Añadimos plato si el token ha sido verificado
+	if (verifyToken(token)) {
+		
+		// Cogemos el userId de la info del token
+		const { userId } = getDataToken(token);
+
+	const userOrders = await Order.find({buyer: userId},["dish"]);
     const dishIds= userOrders.map(orderData => orderData.dish);
     const orderedDishes= await Dish.find({_id:{$in:dishIds}},["name","description","seller"]);
 	res.send (orderedDishes);
-}
+} else {res.send("No existen platos")};}
 
 
 
@@ -94,4 +107,4 @@ module.exports = {
 	getListOfDishes,
 	getDishesBySeller,
 	getLatestDishesOrderedByUser
-}
+} 
