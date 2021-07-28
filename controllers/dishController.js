@@ -1,4 +1,5 @@
 const { verifyToken, getDataToken } = require ('../utils/tokens.js')
+const Order = require('../models/OrderModel.js');
 
 // Importamos modelo
 const Dish = require ('../models/DishModel.js');
@@ -77,6 +78,13 @@ const getDishesBySeller = async (req, res) => {
 	const Dishes = await Dish.find({seller:req.params.id});
 	res.send (Dishes);
 }
+// Funcion para mostrar los pedidos de cada usuario
+const 	getLatestDishesOrderedByUser = async (req, res) => {
+	const userOrders = await Order.find({buyer:req.params.id},["dish"]);
+    const dishIds= userOrders.map(orderData => orderData.dish);
+    const orderedDishes= await Dish.find({_id:{$in:dishIds}},["name","description","seller"]);
+	res.send (orderedDishes);
+}
 
 
 
@@ -84,5 +92,6 @@ const getDishesBySeller = async (req, res) => {
 module.exports = {
 	addDish,
 	getListOfDishes,
-	getDishesBySeller
+	getDishesBySeller,
+	getLatestDishesOrderedByUser
 }
