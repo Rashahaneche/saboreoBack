@@ -10,10 +10,19 @@ const getOrder = async (req, res) => {
 
 // Funcion para gestionar post
 const postOrder = (req, res) => {
+    // Cogemos el token de la cabecera de la llamada Post
+	const token  = req.header('authorization').split(" ")[1];
 
-	const {seller,buyer,dish,date,completed} = req.body;
+	// Cogemos la info del body para generar el plato
+	const { name, description, price, allergens, vegan, glutenFree, tags } = req.body;
+
+	// Añadimos plato si el token ha sido verificado
+	if (verifyToken(token)) {
+        // Cogemos el userId de la info del token
+	const { userId } = getDataToken(token);
+	const {seller,dish,date,completed} = req.body;
+    const buyer = userId;
 	const newOrder= new Order();
-
 	newOrder.seller = seller;
 	newOrder.buyer = buyer;
 	newOrder.dish = dish;
@@ -25,7 +34,7 @@ const postOrder = (req, res) => {
 			console.log('Error añadiendo ejemplo', err);
 		}
 		res.json(savedInfo);
-	});
+	})};
 }
 
 // Exportamos como objeto
