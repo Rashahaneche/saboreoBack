@@ -1,26 +1,28 @@
 // Importamos modelo
 const Order = require('../models/OrderModel.js');
-const Dish = require ('../models/DishModel.js');
 
 // Funcion para gestionar get
 const getOrder = async (req, res) => {
-	const Order = await Order.find({_id:req.params.id});
-	res.send (Order);
+	const order = await Order.find({_id:req.params.id});
+	res.send (order);
 }
-// Funcion para mostrar los pedidos de cada usuario
-const getOrderByUser = async (req, res) => {
-	const UserOrders = await Order.find({buyer:req.params.id},["dish"]);
-    const dishIds= UserOrders.map(orderData => orderData.dish);
-    const Orders= await Dish.find({_id:{$in:dishIds}},["name","description","seller"]);
-	res.send (Orders);
-}
+
 
 // Funcion para gestionar post
 const postOrder = (req, res) => {
+    // Cogemos el token de la cabecera de la llamada Post
+	const token  = req.header('authorization').split(" ")[1];
 
-	const {seller,buyer,dish,date,completed} = req.body;
+	// Cogemos la info del body para generar el plato
+	const { name, description, price, allergens, vegan, glutenFree, tags } = req.body;
+
+	// Añadimos plato si el token ha sido verificado
+	if (verifyToken(token)) {
+        // Cogemos el userId de la info del token
+	const { userId } = getDataToken(token);
+	const {seller,dish,date,completed} = req.body;
+    const buyer = userId;
 	const newOrder= new Order();
-
 	newOrder.seller = seller;
 	newOrder.buyer = buyer;
 	newOrder.dish = dish;
@@ -32,12 +34,11 @@ const postOrder = (req, res) => {
 			console.log('Error añadiendo ejemplo', err);
 		}
 		res.json(savedInfo);
-	});
+	})};
 }
 
 // Exportamos como objeto
 module.exports = {
 	getOrder,
-	postOrder,
-    getOrderByUser
+	postOrder
 }
