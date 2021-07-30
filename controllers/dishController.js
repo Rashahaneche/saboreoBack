@@ -79,7 +79,7 @@ const getDishesBySeller = async (req, res) => {
 	res.send (Dishes);
 }
 // Funcion para mostrar los pedidos de cada usuario
-const 	getLatestDishesOrderedByUser = async (req, res) => {
+const getLatestDishesOrderedByUser = async (req, res) => {
 
 	// Cogemos el token de la cabecera de la llamada Post
 	const token  = req.header('authorization').split(" ")[1];
