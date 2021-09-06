@@ -1,16 +1,20 @@
-const uploadFile = require("../middleware/upload");
+// const uploadFile = require("../middleware/upload");
 
 const upload = async (req, res) => {
-  try {
-    await uploadFile(req, res);
+  try { 
+    console.log(req);
 
-    if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
+    return res.status(200).send({ message: "OK" });
 
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
+    // if (req.file === undefined) {
+    //     return res.status(400).send({ message: "Please upload a file!" });
+    // }
+        
+    // // await uploadFile(req, res);  
+    
+    // res.status(200).send({
+    //   message: "Uploaded the file successfully: ", 
+    // });
 } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
@@ -19,7 +23,7 @@ const upload = async (req, res) => {
     }
 
     res.status(500).send({
-      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the file ${err}`,
     });
   }
 };
@@ -61,8 +65,10 @@ const download = (req, res) => {
   });
 };
 
+
+
 module.exports = {
   upload,
-  getListFiles,
   download,
+  getListFiles,
 };

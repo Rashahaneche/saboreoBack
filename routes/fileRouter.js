@@ -1,13 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const controller = require("../controllers/fileController");
+const fileController = require('../controllers/fileController');
+const imageUpload = require('../middleware/upload');
 
-let routes = (appserv) => {
-  router.post("/upload", controller.upload);
-  router.get("/files", controller.getListFiles);
-  router.get("/files/:name", controller.download);
 
-  appserv.use(router);
-};
+router.post("/", imageUpload.single('image'), fileController.upload);
+router.get("/list", fileController.getListFiles);
+router.get("/files/:name", fileController.download);
 
-module.exports = routes;
+
+module.exports = router;
+
+
