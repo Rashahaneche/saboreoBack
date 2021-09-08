@@ -86,7 +86,10 @@ const logInUser = async (req, res) => {
 
 	// Buscamos usuario x email
 	const userFinded = await User.findOne({email: email})
-    if (!userFinded) return res.json('El usuario no existe');
+    if (!userFinded) return res.json({
+		success: false,
+		message: 'El usuario no existe'
+	});
 	// Validamos password
 	if ( await validatePassword (password, userFinded.password)) {
 		// Devolvemos token
