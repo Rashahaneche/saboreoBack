@@ -41,6 +41,7 @@ const addDish = async (req, res) => {
 }
 
 const getListOfDishes = async (req, res) => {
+
 	//Funcion para gestionar el número de platos a devolver. Minimo 1 y máximo 64. Defecto 12
 	const getLimitQuery = (limit) => {
 		if(!limit) return 12;
@@ -67,7 +68,7 @@ const getListOfDishes = async (req, res) => {
 		... getSearchDish(req.query.text),
 		... getTrueFalseQuery('vegan', req.query.vegan),
 		... getTrueFalseQuery('glutenFree', req.query.glutenFree)
-		}).sort('-dateCreation').populate('seller', 'name surname nickname').limit(getLimitQuery(Number(req.query.limit)))
+		}).sort('-dateCreation').populate('seller', 'name surname email').limit(getLimitQuery(Number(req.query.limit)))
 
 	// Devolvemos resultados
 	res.json(resultQuery)

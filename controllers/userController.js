@@ -108,35 +108,35 @@ const logInUser = async (req, res) => {
 
 // Función para validar usuario (nickname)
 const validateUser = async (req, res) => {
-    const thatUserExists = await User.exists({nickname:req.query.nickname});
-    return res.send(thatUserExists);
+	const thatUserExists = await User.exists({nickname:req.query.nickname});
+	return res.send(thatUserExists);
 }
 
 // Funcion para verificar rapidamente nickname e email
 const verifyData = async (req, res) => {
 
-    const data = Object.keys(req.body)[0];
-    const dataValue = Object.values(req.body)[0];
+	const data = Object.keys(req.body)[0];
+	const dataValue = Object.values(req.body)[0];
 
-    const dataFinded = await User.exists({[data] : [dataValue]});
+	const dataFinded = await User.exists({[data] : [dataValue]});
 
-    if (dataFinded) return res.json ({
-            "error" : true,
-            "message" : `Este ${data} no está disponible`
-        }) 
+	if (dataFinded) return res.json ({
+			"error" : true,
+			"message" : `Este ${data} no está disponible`
+		}) 
 
-    res.json({
-            "error" : undefined,
-            "message" : `Este ${data} está disponible`
-            })
+	res.json({
+			"error" : undefined,
+			"message" : `Este ${data} está disponible`
+			})
 }
 
 // Funccion para pintar Users
 const showUsers = async (req, res) => {
-    
-    // Buscamos cocineros
-    const userId= await Dish.distinct("seller"); 
-    const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"]);
+	
+	// Buscamos cocineros
+	const userId= await Dish.distinct("seller"); 
+	const cooksFound = await User.find({_id:{$in:userId}},["name","surname","nickname","description"]);
 
     //Si no hay cocineros
     if (!cooksFound) return res.json('No existen cocineros');
@@ -146,10 +146,14 @@ const showUsers = async (req, res) => {
 }
 // Exportamos como objeto
 module.exports = {
-    singUpUser,
-    verifyUser,
-    logInUser,
-    verifyData,
-    validateUser,
-    showUsers
+	singUpUser,
+	verifyUser,
+	logInUser,
+	verifyData,
+	validateUser,
+	showUsers
 }
+
+
+
+
