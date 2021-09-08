@@ -84,25 +84,28 @@ const logInUser = async (req, res) => {
     const {email, password} = req.body;
     // Si es null devolver error
 
-    // Buscamos usuario x email
-    const userFinded = await User.findOne({email: email})
-    if (!userFinded) return res.json('El usuario no existe');
-    // Validamos password
-    if ( await validatePassword (password, userFinded.password)) {
-        // Devolvemos token
-        res.json({
-            token : getToken(userFinded.id),
-            profile: {
-                name : userFinded.name,
-                surname : userFinded.surname,
-                nickname : userFinded.nickname,
-                email: userFinded.email 
-                }
-            })
+	// Buscamos usuario x email
+	const userFinded = await User.findOne({email: email})
+    if (!userFinded) return res.json({
+		success: false,
+		message: 'El usuario no existe'
+	});
+	// Validamos password
+	if ( await validatePassword (password, userFinded.password)) {
+		// Devolvemos token
+		res.json({
+			token : getToken(userFinded.id),
+			profile: {
+				name : userFinded.name,
+				surname : userFinded.surname,
+				nickname : userFinded.nickname,
+				email: userFinded.email 
+				}
+			})
 
-    } else {
-        res.json('La contraseña no es correcta')
-    }
+	} else {
+		res.json('La contraseña no es correcta')
+	}
 
 }
 
