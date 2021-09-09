@@ -87,7 +87,7 @@ const logInUser = async (req, res) => {
 	// Buscamos usuario x email
 	const userFinded = await User.findOne({email: email})
     if (!userFinded) return res.json({
-		success: false,
+		error: true,
 		message: 'El usuario no existe'
 	});
 	// Validamos password
@@ -112,6 +112,19 @@ const logInUser = async (req, res) => {
 // Función para validar usuario (nickname)
 const validateUser = async (req, res) => {
 	const thatUserExists = await User.exists({nickname:req.query.nickname});
+	console.log('TEST', thatUserExists);
+	if(thatUserExists) {
+		return res.json({
+			userIsAvailable: !thatUserExists,
+			message: 'El usuario ya está ocupado. Por favor, elige otro.'
+		});
+	} else {
+		return res.json({
+			userIsAvailable: !thatUserExists,
+			message: 'Nickname disponible.'
+		});
+	}
+
 	return res.send(thatUserExists);
 }
 
