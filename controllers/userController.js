@@ -81,12 +81,11 @@ const verifyUser = async (req, res) => {
 // Funcion para gestionar LOGIN USER
 const logInUser = async (req, res) => {
 
-    const {email, password} = req.body;
+    const {nickname, password} = req.body;
     // Si es null devolver error
-
-	// Buscamos usuario x email
-	const userFinded = await User.findOne({email: email})
-    if (!userFinded) return res.json({
+	// Buscamos usuario x nickname
+	const userFinded = await User.findOne({nickname: nickname})
+    if (!userFinded) return res.status(404).json({
 		success: false,
 		message: 'El usuario no existe'
 	});
