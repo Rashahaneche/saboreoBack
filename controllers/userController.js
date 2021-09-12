@@ -111,7 +111,17 @@ const logInUser = async (req, res) => {
 // Función para validar usuario (nickname)
 const validateUser = async (req, res) => {
 	const thatUserExists = await User.exists({nickname:req.query.nickname});
-	return res.send(thatUserExists);
+	if(thatUserExists) {
+		return res.json({
+			userIsAvailable: !thatUserExists,
+			message: 'El nickname ya está ocupado. Por favor, elige otro.'
+		});
+	} else {
+		return res.json({
+			userIsAvailable: !thatUserExists,
+			message: 'Nickname disponible.'
+		});
+	}
 }
 
 // Funcion para verificar rapidamente nickname e email
