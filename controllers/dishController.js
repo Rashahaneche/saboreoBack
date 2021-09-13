@@ -79,6 +79,11 @@ const getDishesBySeller = async (req, res) => {
 	const Dishes = await Dish.find({seller:req.params.id});
 	res.send (Dishes);
 }
+//Funcion para buscar platos por un seller.
+const getDishByID = async (req, res) => {
+	const Dishes = await Dish.find({_id:req.params.id});
+	res.send (Dishes);
+}
 // Funcion para mostrar los pedidos de cada usuario
 const getLatestDishesOrderedByUser = async (req, res) => {
 
@@ -107,5 +112,6 @@ module.exports = {
 	addDish,
 	getListOfDishes,
 	getDishesBySeller,
-	getLatestDishesOrderedByUser
+	getLatestDishesOrderedByUser,
+	getDishByID
 } 
