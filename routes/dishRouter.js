@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.post('/', dishController.addDish);
 router.get('/', dishController.getListOfDishes);
-router.get('/user/:id',dishController.getDishesBySeller)
+router.get('/:id',dishController.getDishByID);
+router.post('/:id', dishController.editDishById);
+router.get('/user/:id',dishController.getDishesBySeller);
 router.get ('/ordered', dishController.getLatestDishesOrderedByUser)
 
 module.exports = router;
