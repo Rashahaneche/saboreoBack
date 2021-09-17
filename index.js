@@ -37,5 +37,5 @@ app.use('/upload', fileRouter)
 const PORT= process.env.PORT||3000 ;
 // Config puerto
 app.listen(PORT, () => {
-  console.log(`Servidor funcionando en ${Port}`);
+  console.log(`Servidor funcionando en ${PORT}`);
 })
