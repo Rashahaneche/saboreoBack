@@ -34,8 +34,8 @@ app.use('/user', userRouter)
 app.use('/dish', dishRouter)
 app.use('/order', orderRouter)
 app.use('/upload', fileRouter)
-
+const PORT= process.env.PORT||3000 ;
 // Config puerto
-app.listen(3000, () => {
-  console.log(`Servidor funcionando en http://localhost:3000`)
+app.listen(PORT, () => {
+  console.log(`Servidor funcionando en ${Port}`);
 })
