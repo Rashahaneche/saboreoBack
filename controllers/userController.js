@@ -85,6 +85,7 @@ const logInUser = async (req, res) => {
     // Si es null devolver error
 	// Buscamos usuario x nickname
 	const userFinded = await User.findOne({nickname: nickname})
+	console.log(userFinded);
     if (!userFinded) return res.status(404).json({
 		success: false,
 		message: 'El usuario no existe'
